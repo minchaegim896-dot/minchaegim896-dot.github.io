@@ -1,0 +1,7 @@
+<svg width="194" height="191" viewBox="0 0 194 191" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="stroke0_159_1164" fill="white">
+<path d="M194 95.5C194 148.243 150.572 191 97 191C43.4284 191 0 148.243 0 95.5C0 42.7568 43.4284 0 97 0C150.572 0 194 42.7568 194 95.5Z"/>
+</mask>
+<ellipse cx="97" cy="95.5" rx="97" ry="95.5" stroke-width="6" stroke="#CEFF00" mask="url(#stroke0_159_1164)"/>
+<path d="M74.965 78.264H90.197V111.928H124.181V123.064H74.965V78.264Z" fill="#CEFF00"/>
+</svg>
