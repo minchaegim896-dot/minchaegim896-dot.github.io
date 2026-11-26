@@ -1,0 +1,184 @@
+* {
+    box-sizing: border-box
+}
+
+html {
+    scroll-behavior: smooth
+}
+
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, "Noto Sans KR", sans-serif
+}
+
+.players-section {
+    background: #000;
+    min-height: 150vh;
+    overflow: hidden;
+    padding-top: 0
+}
+
+.scene-shell {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto
+}
+
+.scene {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000
+}
+
+.scene-heading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    pointer-events: none
+}
+
+.players-cards {
+    position: absolute;
+    inset: 0
+}
+
+.player-card {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    height: var(--h);
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    perspective: 1200px;
+    z-index: var(--layer);
+    -webkit-tap-highlight-color: transparent
+}
+
+.player-card:focus-visible {
+    outline: 2px solid #dfff00;
+    outline-offset: 5px
+}
+
+.card-inner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .8s ease-in-out
+}
+
+.player-card.is-flipped .card-inner {
+    transform: rotateY(180deg)
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    inset: 0;
+    display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden
+}
+
+.card-back {
+    transform: rotateY(180deg)
+}
+
+.card-front img,
+.card-back img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    user-select: none;
+    pointer-events: none
+}
+
+.players-description {
+    max-width: 1500px;
+    margin: -3.2vw auto 0;
+    padding: 0 24px;
+    text-align: center;
+    font-size: clamp(10px, 1.05vw, 17px);
+    line-height: 1.4;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity .8s ease-in-out, transform .8s ease-in-out
+}
+
+.players-description p {
+    margin: 0
+}
+
+.players-description.is-visible {
+    opacity: 1;
+    transform: translateY(0)
+}
+
+.interaction-hint {
+    text-align: center;
+    margin: 18vh 0 10vh;
+    color: #b5b5b5;
+    font-size: 12px;
+    letter-spacing: .24em
+}
+
+@media(max-width:700px) {
+    .scene-shell {
+        width: 110%;
+        margin-left: -5%
+    }
+
+    .players-section {
+        min-height: 115vh
+    }
+
+    .players-description {
+        margin: 5vh auto 0;
+        padding: 0 20px;
+        font-size: 11px
+    }
+
+    .interaction-hint {
+        margin-top: 12vh
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+    .card-inner,
+    .players-description {
+        transition-duration: .01ms
+    }
+}
+/* 선수 카드 크기 확대 */
+.players-section .player-card {
+  width: calc(var(--w) * 1.25);
+  height: calc(var(--h) * 1.25);
+}
+
+/* 카드 6장 전체 가운데 정렬 */
+.players-section .players-cards {
+  transform: translateX(-4%);
+}
+/* 하단 인터랙션 안내 문구 숨기기 */
+.players-section .interaction-hint {
+  display: none;
+}
+
+
+
+
+
+
+
+
