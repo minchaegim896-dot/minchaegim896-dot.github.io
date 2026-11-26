@@ -30,10 +30,28 @@ function update(){
  logos.style.opacity=badges;
  for(const b of hitboxes.children){const active=badges>.98;b.classList.toggle('enabled',active);b.tabIndex=active?0:-1;b.disabled=!active;}
 }
-function openClub(index){
+const detailCache=new Map();
+function loadDetail(src){
+ if(!detailCache.has(src)){
+  const img=new Image(); img.src=src;
+  const ready=img.decode().then(()=>img).catch(err=>{detailCache.delete(src);throw err;});
+  detailCache.set(src,ready);
+ }
+ return detailCache.get(src);
+}
+let requestId=0;
+async function openClub(index){
  if(progress<.82)return;
  const club=clubs[index];
  if(!club)return;
+ const token=++requestId;
+ if(club.builtInDetail){
+  try{await loadDetail(club.builtInDetail);}catch(e){console.error(e);return;}
+  if(token!==requestId||opened||progress<.82)return;
+  detailArt.src=club.builtInDetail;
+  try{await detailArt.decode();}catch(e){console.error(e);return;}
+  if(token!==requestId||opened||progress<.82)return;
+ }
  const ready=club.builtInDetail||(club.logo&&club.name&&club.description);
  // 상세 이미지가 없는 구단도 클릭/복귀는 작동합니다.
  // 해당 구단 PNG 3개가 제공되기 전까지는 잘못된 구단 정보를 표시하지 않습니다.
@@ -45,7 +63,7 @@ function openClub(index){
 }
 function closeClub(){
  if(!opened)return;
- opened=null;hitboxes.style.pointerEvents='';detail.classList.remove('open');detail.setAttribute('aria-hidden','true');document.body.style.overflow='';
+ ++requestId;opened=null;hitboxes.style.pointerEvents='';detail.classList.remove('open');detail.setAttribute('aria-hidden','true');document.body.style.overflow='';
  // 이전 스크롤 상태를 보존하되 항상 완성된 3번 지도 화면으로 복귀.
  const target=scene.offsetTop+Math.max(1,scene.offsetHeight-window.innerHeight)*.99;
  window.scrollTo({top:target,behavior:'instant'});update();
@@ -59,3 +77,7 @@ returnButton.addEventListener('click',closeClub);
 window.addEventListener('scroll',update,{passive:true});window.addEventListener('resize',update);
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&opened)closeClub()});
 update();
+
+// Preload after initial page load, two at a time.
+async function preloadClubs(){let next=0;async function worker(){while(next<clubs.length){const club=clubs[next++];try{await loadDetail(club.builtInDetail);}catch(e){console.warn(e);}}}await Promise.all([worker(),worker()]);}
+if(document.readyState==="complete")preloadClubs();else window.addEventListener("load",preloadClubs,{once:true});
